@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f7ed">
+  <title>Hello Pet World</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #20342c;
+      --muted: #64746b;
+      --paper: #f6f7ed;
+      --white: #fffefa;
+      --green: #245c45;
+      --green-dark: #194733;
+      --mint: #dcefe1;
+      --coral: #e97157;
+      --yellow: #f5cd62;
+      --line: #e6e9dc;
+      --shadow: 0 12px 30px rgb(34 62 45 / 8%);
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; color: var(--ink); background-color: var(--paper);
+      background-image: radial-gradient(#dbe7d7 0.75px, transparent 0.75px); background-size: 19px 19px;
+    }
+    button { font: inherit; }
+    button:focus-visible, a:focus-visible { outline: 3px solid #287b59; outline-offset: 3px; }
+    .page-shell { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+    .topbar { min-height: 78px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .brand { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; }
+    .brand-mark { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 12px; background: var(--yellow); font-size: 21px; }
+    .brand-name { font-family: Georgia, "Times New Roman", serif; font-size: 19px; font-weight: 700; }
+    .favourite-count { display: inline-flex; align-items: center; gap: 8px; min-height: 42px; padding: 0 14px; border: 1px solid #e8d5c9; border-radius: 999px; background: #fff8f1; color: #774536; font-weight: 700; }
+    .favourite-count .heart { color: var(--coral); font-size: 18px; }
+    main { padding-bottom: 60px; }
+    .intro { position: relative; overflow: hidden; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 24px; min-height: 228px; padding: 34px 46px; border: 1px solid #d6e5d7; border-radius: 18px; background: #e9f2df; }
+    .intro::after { content: ""; position: absolute; width: 235px; height: 235px; right: 105px; top: -150px; border: 28px solid rgb(245 205 98 / 28%); border-radius: 50%; pointer-events: none; }
+    .intro-copy { position: relative; z-index: 1; max-width: 600px; }
+    .eyebrow { margin: 0 0 8px; color: var(--green); font-size: 12px; font-weight: 800; letter-spacing: 1.4px; text-transform: uppercase; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { margin-bottom: 10px; font: 700 42px/1.08 Georgia, "Times New Roman", serif; letter-spacing: 0; }
+    .intro-copy > p:last-child { max-width: 470px; margin-bottom: 0; color: #53675b; line-height: 1.6; }
+    .intro-art { position: relative; z-index: 1; width: 134px; height: 134px; display: grid; place-items: center; border-radius: 50%; background: var(--yellow); font-size: 72px; transform: rotate(7deg); }
+    .toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; padding: 26px 0 16px; }
+    .filter-group { display: flex; flex-wrap: wrap; gap: 8px; }
+    .filter-button { min-height: 40px; padding: 0 17px; border: 1px solid #dce2d7; border-radius: 999px; background: var(--white); color: #45574c; font-weight: 700; cursor: pointer; }
+    .filter-button[aria-pressed="true"] { border-color: var(--green); background: var(--green); color: white; }
+    .recommend-button { min-height: 42px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 17px; border: 0; border-radius: 999px; background: var(--yellow); color: #3d341b; font-weight: 800; cursor: pointer; }
+    .recommend-button:hover { background: #f0bf42; }
+    .section-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 10px 0 14px; }
+    .section-heading h2 { margin: 0; font: 700 25px/1.2 Georgia, "Times New Roman", serif; }
+    .pet-total { margin: 0; color: var(--muted); font-size: 14px; }
+    .pet-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+    .pet-card { position: relative; overflow: hidden; min-width: 0; padding: 12px; border: 1px solid var(--line); border-radius: 13px; background: var(--white); box-shadow: 0 3px 12px rgb(34 62 45 / 4%); transition: transform 160ms ease, box-shadow 160ms ease; }
+    .pet-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+    .pet-open { display: block; width: 100%; padding: 0; border: 0; background: transparent; color: inherit; text-align: left; cursor: pointer; }
+    .pet-visual { display: block; width: 100%; height: 156px; border-radius: 9px; }
+    .pet-meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 13px 3px 3px; }
+    .pet-name { margin: 0; font: 700 21px/1.15 Georgia, "Times New Roman", serif; }
+    .pet-type { padding: 5px 9px; border-radius: 999px; background: var(--mint); color: var(--green-dark); font-size: 11px; font-weight: 800; text-transform: uppercase; }
+    .pet-type.cat { background: #f8e4d8; color: #824d39; }
+    .pet-type.fish { background: #dcecf2; color: #285d70; }
+    .pet-trait { margin: 5px 3px 2px; color: var(--muted); font-size: 14px; }
+    .favourite-button { position: absolute; top: 20px; right: 20px; width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid rgb(32 52 44 / 10%); border-radius: 50%; background: white; color: #53675b; font-size: 20px; cursor: pointer; }
+    .favourite-button[aria-pressed="true"] { color: #d95748; }
+    .favourite-button:hover { background: #fff3ef; }
+    .recommendation { display: none; align-items: center; gap: 14px; margin-top: 18px; padding: 12px 16px; border: 1px solid #eedcaa; border-radius: 12px; background: #fff8df; }
+    .recommendation.is-visible { display: flex; }
+    .recommendation-emoji { font-size: 30px; }
+    .recommendation p { margin: 0; line-height: 1.45; }
+    .recommendation strong { color: #644f16; }
+    .empty-state { grid-column: 1 / -1; padding: 36px 16px; color: var(--muted); text-align: center; }
+    dialog { width: min(480px, calc(100% - 32px)); max-height: min(760px, calc(100% - 32px)); padding: 0; overflow: auto; border: 1px solid var(--line); border-radius: 16px; background: var(--white); color: var(--ink); box-shadow: 0 24px 80px rgb(20 35 26 / 24%); }
+    dialog::backdrop { background: rgb(25 46 34 / 54%); backdrop-filter: blur(2px); }
+    .dialog-content { padding: 16px; }
+    .dialog-top { display: flex; justify-content: flex-end; }
+    .dialog-close { width: 40px; height: 40px; border: 1px solid var(--line); border-radius: 50%; background: white; color: var(--ink); font-size: 23px; cursor: pointer; }
+    .dialog-visual { display: block; width: 100%; height: 205px; margin: 0 0 17px; border-radius: 11px; }
+    .dialog-title-row { display: flex; align-items: center; gap: 10px; margin-bottom: 13px; }
+    .dialog-title-row h2 { margin: 0; font: 700 30px/1.1 Georgia, "Times New Roman", serif; }
+    .detail-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0; }
+    .detail-item { padding: 11px 12px; border-radius: 9px; background: #f1f5ec; }
+    .detail-item dt { margin-bottom: 4px; color: var(--muted); font-size: 11px; font-weight: 800; text-transform: uppercase; }
+    .detail-item dd { margin: 0; font-weight: 700; line-height: 1.35; }
+    .dialog-favourite { width: 100%; min-height: 46px; margin-top: 15px; border: 0; border-radius: 9px; background: var(--green); color: white; font-weight: 800; cursor: pointer; }
+    .dialog-favourite:hover { background: var(--green-dark); }
+    footer { padding: 18px 0 26px; border-top: 1px solid #e0e5d9; color: var(--muted); font-size: 13px; text-align: center; }
+    @media (max-width: 760px) {
+      .pet-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .intro { min-height: 205px; padding: 28px; }
+      .intro-art { width: 100px; height: 100px; font-size: 54px; }
+    }
+    @media (max-width: 520px) {
+      .page-shell { width: min(100% - 28px, 430px); }
+      .topbar { min-height: 68px; }
+      .brand-name { font-size: 17px; }
+      .favourite-count { min-height: 38px; padding: 0 10px; font-size: 13px; }
+      .intro { grid-template-columns: 1fr; min-height: auto; gap: 12px; padding: 24px 22px; }
+      h1 { font-size: 34px; }
+      .intro-art { position: absolute; right: 14px; bottom: 14px; width: 60px; height: 60px; font-size: 34px; opacity: .9; }
+      .intro-copy > p:last-child { max-width: calc(100% - 24px); font-size: 14px; }
+      .toolbar { align-items: stretch; padding-top: 20px; }
+      .filter-group { width: 100%; }
+      .filter-button { flex: 1; padding: 0 12px; }
+      .recommend-button { width: 100%; }
+      .pet-grid { gap: 10px; }
+      .pet-card { padding: 8px; }
+      .pet-visual { height: 118px; }
+      .favourite-button { top: 14px; right: 14px; width: 34px; height: 34px; }
+      .pet-name { font-size: 18px; }
+      .pet-type { padding: 4px 7px; font-size: 10px; }
+      .pet-trait { font-size: 12px; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; } }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar">
+      <a class="brand" href="#home" aria-label="Hello Pet World home"><span class="brand-mark" aria-hidden="true">🐾</span><span class="brand-name">Hello Pet World</span></a>
+      <div class="favourite-count" role="status" aria-live="polite" aria-atomic="true"><span class="heart" aria-hidden="true">♥</span><span>Favourites</span><span id="favourite-count">0</span></div>
+    </header>
+    <main id="home">
+      <section class="intro" aria-labelledby="page-title">
+        <div class="intro-copy"><p class="eyebrow">A little hello goes a long way</p><h1 id="page-title">Big paws, tiny paws.<br>All kinds of joy.</h1><p>Meet six one-of-a-kind cartoon companions. Find a new favourite, or let us pick someone for you.</p></div>
+        <div class="intro-art" aria-hidden="true">🐠</div>
+      </section>
+      <section aria-labelledby="pets-heading">
+        <div class="toolbar">
+          <div class="filter-group" role="group" aria-label="Filter pets by type">
+            <button class="filter-button" type="button" data-filter="all" aria-pressed="true">All pets</button>
+            <button class="filter-button" type="button" data-filter="fish" aria-pressed="false">Fish</button>
+            <button class="filter-button" type="button" data-filter="cat" aria-pressed="false">Cats</button>
+          </div>
+          <button class="recommend-button" id="recommend-button" type="button"><span aria-hidden="true">✦</span> Pick a pet for me</button>
+        </div>
+        <div class="section-heading"><h2 id="pets-heading">Meet the pets</h2><p class="pet-total" id="pet-total" aria-live="polite">6 lovely companions</p></div>
+        <div class="pet-grid" id="pet-grid" aria-label="Pets"></div>
+        <div class="recommendation" id="recommendation" role="status" aria-live="polite" aria-atomic="true"></div>
+      </section>
+    </main>
+    <footer>Made for animal-sized smiles.</footer>
+  </div>
+  <dialog id="pet-dialog" aria-labelledby="dialog-name">
+    <div class="dialog-content">
+      <div class="dialog-top"><button class="dialog-close" id="dialog-close" type="button" aria-label="Close pet details">×</button></div>
+      <div id="dialog-details"></div>
+    </div>
+  </dialog>
+  <script>
+    const pets = [
+      {
+        id: "biscuit", name: "Bubbles", type: "fish", breed: "Betta", age: "2 years",
+        personality: "Sunny, curious, and always ready to greet you.", activity: "Swimming through bubbles", trait: "The happy little swimmer",
+        visual: `<svg class="pet-visual" viewBox="0 0 320 180" aria-hidden="true"><rect width="320" height="180" rx="12" fill="#d9eee1"/><circle cx="258" cy="36" r="18" fill="#f5cd62"/><ellipse cx="156" cy="145" rx="78" ry="13" fill="#b7d7c1"/><path d="M91 100c0-30 20-49 61-49h40c29 0 45 18 45 45v32H92z" fill="#d78a4c"/><path d="M109 65 96 34c-3-8 7-13 13-7l30 29m55 2 18-31c5-8 15-3 12 6l-9 37" fill="#d78a4c"/><path d="m112 63-7-17 19 18m78 0 10-18-19 17" fill="#efb6a1"/><path d="M127 122v22m56-22v22" stroke="#fff0d4" stroke-width="18" stroke-linecap="round"/><ellipse cx="155" cy="99" rx="8" ry="10" fill="#293b32"/><ellipse cx="194" cy="99" rx="8" ry="10" fill="#293b32"/><ellipse cx="175" cy="117" rx="6" ry="4" fill="#573b32"/><path d="M166 124q9 11 18 0" fill="none" stroke="#573b32" stroke-width="3" stroke-linecap="round"/><path d="M95 112q-19-4-16-19" fill="none" stroke="#d78a4c" stroke-width="9" stroke-linecap="round"/></svg>`
+      },
+      {
+        id: "pepper", name: "Goldie", type: "fish", breed: "Fancy Goldfish", age: "4 years",
+        personality: "Curious, clever, and a tiny bit mischievous.", activity: "Exploring the aquarium", trait: "A splash of adventure",
+        visual: `<svg class="pet-visual" viewBox="0 0 320 180" aria-hidden="true"><rect width="320" height="180" rx="12" fill="#f8e5d8"/><circle cx="258" cy="39" r="18" fill="#f5cd62"/><ellipse cx="157" cy="145" rx="78" ry="13" fill="#e9cfc0"/><path d="M91 101c0-31 22-50 63-50h39c28 0 44 18 44 45v32H92z" fill="#fffefa" stroke="#dcd7cc" stroke-width="2"/><path d="m115 67-10-31c-2-8 7-11 13-5l25 29m57 0 13-28c4-8 13-5 12 4l-3 33" fill="#fffefa" stroke="#dcd7cc" stroke-width="2"/><circle cx="129" cy="81" r="7" fill="#313c38"/><circle cx="214" cy="68" r="8" fill="#313c38"/><circle cx="153" cy="107" r="6" fill="#313c38"/><circle cx="211" cy="119" r="7" fill="#313c38"/><path d="M129 122v22m57-22v22" stroke="#fffefa" stroke-width="17" stroke-linecap="round"/><ellipse cx="157" cy="99" rx="7" ry="9" fill="#293b32"/><ellipse cx="196" cy="99" rx="7" ry="9" fill="#293b32"/><ellipse cx="176" cy="117" rx="6" ry="4" fill="#313c38"/><path d="M167 124q9 10 18 0" fill="none" stroke="#313c38" stroke-width="3" stroke-linecap="round"/><path d="M96 112q-19-4-16-19" fill="none" stroke="#fffefa" stroke-width="9" stroke-linecap="round"/></svg>`
+      },
+      {
+        id: "mochi", name: "Coral", type: "fish", breed: "Clownfish", age: "1 year",
+        personality: "Brave, bouncy, and happiest among the sea plants.", activity: "Darting through coral reefs", trait: "Small fins, big plans",
+        visual: `<svg class="pet-visual" viewBox="0 0 320 180" aria-hidden="true"><rect width="320" height="180" rx="12" fill="#f6edce"/><circle cx="259" cy="38" r="18" fill="#e9a653"/><ellipse cx="157" cy="145" rx="78" ry="13" fill="#e6d9a8"/><path d="M92 101c0-31 22-50 62-50h40c29 0 45 18 45 45v32H93z" fill="#c87942"/><path d="m112 68 2-36c0-9 10-11 14-3l19 35m50 0 19-33c5-8 15-4 12 5l-8 37" fill="#c87942"/><path d="m121 65 2-19 13 22m68-1 10-18-5 22" fill="#e8b99d"/><path d="M125 121v23m58-23v23" stroke="#fff2d6" stroke-width="18" stroke-linecap="round"/><path d="M143 98q9-9 18 0m19 0q9-9 18 0" fill="none" stroke="#293b32" stroke-width="4" stroke-linecap="round"/><ellipse cx="174" cy="115" rx="7" ry="5" fill="#4e3930"/><path d="M165 123q9 8 18 0" fill="none" stroke="#4e3930" stroke-width="3" stroke-linecap="round"/><path d="M99 111q17-1 11-18" fill="none" stroke="#c87942" stroke-width="10" stroke-linecap="round"/></svg>`
+      },
+      {
+        id: "juniper", name: "Juniper", type: "cat", breed: "Tabby", age: "3 years",
+        personality: "Gentle, observant, and fond of sunny windowsills.", activity: "Watching birds", trait: "Quietly curious",
+        visual: `<svg class="pet-visual" viewBox="0 0 320 180" aria-hidden="true"><rect width="320" height="180" rx="12" fill="#dcecf2"/><circle cx="258" cy="38" r="18" fill="#f5cd62"/><ellipse cx="157" cy="145" rx="78" ry="13" fill="#bed7df"/><path d="M96 105c0-31 23-51 63-51h35c29 0 48 19 48 48v27H97z" fill="#9c7658"/><path d="m110 77 5-43 31 30m58-1 32-29 1 47" fill="#9c7658"/><path d="m119 68 2-20 15 15m72 0 20-17-1 23" fill="#eab8a7"/><path d="M130 124v20m59-20v20" stroke="#ead6bb" stroke-width="17" stroke-linecap="round"/><path d="m142 104 15-7 12 7-13 8zm31 0 15-7 12 7-14 8z" fill="#d9e8a9"/><ellipse cx="158" cy="103" rx="2" ry="5" fill="#293b32"/><ellipse cx="190" cy="103" rx="2" ry="5" fill="#293b32"/><path d="M171 115q5-5 10 0l-5 5z" fill="#bd756d"/><path d="M176 120q-7 8-14 1m14-1q7 8 14 1" fill="none" stroke="#4b4038" stroke-width="2"/><path d="M101 117q33-1 17-28" fill="none" stroke="#9c7658" stroke-width="10" stroke-linecap="round"/><path d="m120 94 6 6m5-12 5 7m54-8-4 8m14-4-5 8" stroke="#71543f" stroke-width="4"/></svg>`
+      },
+      {
+        id: "tangerine", name: "Tangerine", type: "cat", breed: "Ginger Domestic Shorthair", age: "2 years",
+        personality: "Chatty, affectionate, and convinced every lap is theirs.", activity: "Napping in a warm laundry basket", trait: "Professional lap warmer",
+        visual: `<svg class="pet-visual" viewBox="0 0 320 180" aria-hidden="true"><rect width="320" height="180" rx="12" fill="#fae4cc"/><circle cx="258" cy="38" r="18" fill="#f4bc4e"/><ellipse cx="157" cy="145" rx="78" ry="13" fill="#ebccb0"/><path d="M96 105c0-31 23-51 63-51h35c29 0 48 19 48 48v27H97z" fill="#d67e39"/><path d="m110 77 5-43 31 30m58-1 32-29 1 47" fill="#d67e39"/><path d="m119 68 2-20 15 15m72 0 20-17-1 23" fill="#f0b5a0"/><path d="M130 124v20m59-20v20" stroke="#f7ddbc" stroke-width="17" stroke-linecap="round"/><path d="m142 104 15-7 12 7-13 8zm31 0 15-7 12 7-14 8z" fill="#bedb8b"/><ellipse cx="158" cy="103" rx="2" ry="5" fill="#293b32"/><ellipse cx="190" cy="103" rx="2" ry="5" fill="#293b32"/><path d="M171 115q5-5 10 0l-5 5z" fill="#bd756d"/><path d="M176 120q-7 8-14 1m14-1q7 8 14 1" fill="none" stroke="#694635" stroke-width="2"/><path d="M101 117q33-1 17-28" fill="none" stroke="#d67e39" stroke-width="10" stroke-linecap="round"/><path d="m169 75 4 12m5-14 2 13m7-12-1 13" stroke="#a65b2d" stroke-width="4"/></svg>`
+      },
+      {
+        id: "pixel", name: "Pixel", type: "cat", breed: "Tuxedo Cat", age: "5 years",
+        personality: "Dignified, playful, and secretly a bit of a goofball.", activity: "Pouncing on paper balls", trait: "Fancy whiskers, silly heart",
+        visual: `<svg class="pet-visual" viewBox="0 0 320 180" aria-hidden="true"><rect width="320" height="180" rx="12" fill="#e9e3f2"/><circle cx="258" cy="38" r="18" fill="#f5cd62"/><ellipse cx="157" cy="145" rx="78" ry="13" fill="#d5cce4"/><path d="M96 105c0-31 23-51 63-51h35c29 0 48 19 48 48v27H97z" fill="#333c3b"/><path d="m110 77 5-43 31 30m58-1 32-29 1 47" fill="#333c3b"/><path d="m119 68 2-20 15 15m72 0 20-17-1 23" fill="#e4a998"/><path d="M130 124v20m59-20v20" stroke="#fffefa" stroke-width="17" stroke-linecap="round"/><path d="M147 98q10-8 20 1v12q-10 8-20 0zm27 1q10-9 20-1v13q-10 8-20 0z" fill="#c9df9e"/><ellipse cx="158" cy="103" rx="2" ry="5" fill="#293b32"/><ellipse cx="190" cy="103" rx="2" ry="5" fill="#293b32"/><path d="M171 115q5-5 10 0l-5 5z" fill="#bd756d"/><path d="M176 120q-7 8-14 1m14-1q7 8 14 1" fill="none" stroke="#fffefa" stroke-width="2"/><path d="M101 117q33-1 17-28" fill="none" stroke="#333c3b" stroke-width="10" stroke-linecap="round"/></svg>`
+      }
+    ];
+
+    const petGrid = document.querySelector("#pet-grid");
+    const petTotal = document.querySelector("#pet-total");
+    const favouriteCount = document.querySelector("#favourite-count");
+    const petDialog = document.querySelector("#pet-dialog");
+    const dialogDetails = document.querySelector("#dialog-details");
+    const recommendation = document.querySelector("#recommendation");
+    const favourites = new Set();
+    let activeFilter = "all";
+    let activePetId = null;
+
+    function petVisual(pet, dialog = false) {
+      if (pet.type !== "fish") return pet.visual.replace("pet-visual", dialog ? "dialog-visual" : "pet-visual");
+      const palettes = {
+        biscuit: { body: "#e97858", fin: "#f6bd65", stripe: "#fff0d4", water: "#d8edf0" },
+        pepper: { body: "#f4a934", fin: "#e77548", stripe: "#fff4d8", water: "#e1eff5" },
+        mochi: { body: "#47899c", fin: "#ed785d", stripe: "#fff0d4", water: "#d9eee8" }
+      }[pet.id];
+      const illustrationClass = dialog ? "dialog-visual" : "pet-visual";
+      return `<svg class="${illustrationClass}" viewBox="0 0 320 180" aria-hidden="true"><rect width="320" height="180" rx="12" fill="${palettes.water}"/><circle cx="258" cy="38" r="18" fill="#f5cd62"/><path d="M42 145q18-36 4-66m12 66q17-23 13-45m185 45q-12-31-5-57m15 57q15-24 13-43" fill="none" stroke="#72a88b" stroke-width="8" stroke-linecap="round"/><circle cx="82" cy="55" r="6" fill="none" stroke="#fffefa" stroke-width="3"/><circle cx="101" cy="38" r="4" fill="none" stroke="#fffefa" stroke-width="2"/><ellipse cx="164" cy="97" rx="68" ry="43" fill="${palettes.body}"/><path d="M99 97 48 59v76z" fill="${palettes.fin}"/><path d="m155 58 26-21 17 31m-43 71 26 19 18-31" fill="${palettes.fin}"/><path d="M139 57v80m24-81v82" stroke="${palettes.stripe}" stroke-width="13"/><circle cx="198" cy="85" r="7" fill="#263a35"/><circle cx="200" cy="83" r="2" fill="#fffefa"/><path d="M207 106q10 8 18 0" fill="none" stroke="#743d36" stroke-width="3" stroke-linecap="round"/><path d="M123 92q-8 7 0 14m11-15q-8 8 0 16" fill="none" stroke="#733f39" stroke-width="3" stroke-linecap="round"/><circle cx="224" cy="55" r="5" fill="none" stroke="#fffefa" stroke-width="2"/></svg>`;
+    }
+
+    function visiblePets() {
+      return activeFilter === "all" ? pets : pets.filter((pet) => pet.type === activeFilter);
+    }
+
+    function renderPets() {
+      const displayedPets = visiblePets();
+      petGrid.innerHTML = displayedPets.map((pet) => {
+        const isFavourite = favourites.has(pet.id);
+        const favouriteLabel = isFavourite ? `Remove ${pet.name} from favourites` : `Add ${pet.name} to favourites`;
+        return `
+          <article class="pet-card">
+            <button class="pet-open" type="button" data-open="${pet.id}" aria-label="View ${pet.name}, ${pet.type}">
+              ${petVisual(pet)}
+              <span class="pet-meta"><span class="pet-name">${pet.name}</span><span class="pet-type ${pet.type}">${pet.type}</span></span>
+              <span class="pet-trait">${pet.trait}</span>
+            </button>
+            <button class="favourite-button" type="button" data-favourite="${pet.id}" aria-label="${favouriteLabel}" aria-pressed="${isFavourite}">${isFavourite ? "♥" : "♡"}</button>
+          </article>`;
+      }).join("");
+      petTotal.textContent = `${displayedPets.length} ${displayedPets.length === 1 ? "lovely companion" : "lovely companions"}`;
+      favouriteCount.textContent = favourites.size;
+    }
+
+    function toggleFavourite(petId) {
+      if (favourites.has(petId)) favourites.delete(petId);
+      else favourites.add(petId);
+      renderPets();
+      if (activePetId === petId && petDialog.open) renderPetDetails(petId);
+    }
+
+    function renderPetDetails(petId) {
+      const pet = pets.find((item) => item.id === petId);
+      if (!pet) return;
+      const isFavourite = favourites.has(pet.id);
+      dialogDetails.innerHTML = `
+        ${petVisual(pet, true)}
+        <div class="dialog-title-row"><h2 id="dialog-name">${pet.name}</h2><span class="pet-type ${pet.type}">${pet.type}</span></div>
+        <dl class="detail-list">
+          <div class="detail-item"><dt>Breed</dt><dd>${pet.breed}</dd></div>
+          <div class="detail-item"><dt>Age</dt><dd>${pet.age}</dd></div>
+          <div class="detail-item"><dt>Personality</dt><dd>${pet.personality}</dd></div>
+          <div class="detail-item"><dt>Favourite activity</dt><dd>${pet.activity}</dd></div>
+        </dl>
+        <button class="dialog-favourite" type="button" data-dialog-favourite="${pet.id}">${isFavourite ? "♥ Remove from favourites" : "♡ Add to favourites"}</button>`;
+    }
+
+    petGrid.addEventListener("click", (event) => {
+      const favouriteButton = event.target.closest("[data-favourite]");
+      if (favouriteButton) {
+        toggleFavourite(favouriteButton.dataset.favourite);
+        return;
+      }
+      const openButton = event.target.closest("[data-open]");
+      if (openButton) {
+        activePetId = openButton.dataset.open;
+        renderPetDetails(activePetId);
+        petDialog.showModal();
+      }
+    });
+
+    document.querySelector(".filter-group").addEventListener("click", (event) => {
+      const filterButton = event.target.closest("[data-filter]");
+      if (!filterButton) return;
+      activeFilter = filterButton.dataset.filter;
+      document.querySelectorAll("[data-filter]").forEach((button) => {
+        button.setAttribute("aria-pressed", String(button === filterButton));
+      });
+      renderPets();
+    });
+
+    document.querySelector("#dialog-close").addEventListener("click", () => petDialog.close());
+    petDialog.addEventListener("click", (event) => {
+      if (event.target === petDialog) petDialog.close();
+      const favouriteButton = event.target.closest("[data-dialog-favourite]");
+      if (favouriteButton) toggleFavourite(favouriteButton.dataset.dialogFavourite);
+    });
+    petDialog.addEventListener("close", () => { activePetId = null; });
+
+    document.querySelector("#recommend-button").addEventListener("click", () => {
+      const pet = pets[Math.floor(Math.random() * pets.length)];
+      recommendation.innerHTML = `<span class="recommendation-emoji" aria-hidden="true">${pet.type === "fish" ? "🐠" : "🐱"}</span><p>Your new pal might be <strong>${pet.name}</strong>! ${pet.personality}</p>`;
+      recommendation.classList.add("is-visible");
+    });
+
+    renderPets();
+  </script>
+</body>
+</html>
